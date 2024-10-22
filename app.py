@@ -1,15 +1,9 @@
-from flask import Flask, request
+
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo, InputMediaPhoto
 from telegram.ext import Application, CommandHandler
-import os
 
 # Replace with your bot token
 TOKEN = '7805189662:AAECZeDOqK5luNZOb__V-43aaLwnGJ4QkrY'
-
-app = Flask(__name__)
-
-# Create the application object for telegram
-telegram_app = Application.builder().token(TOKEN).build()
 
 # Define the /start command handler
 async def start(update: Update, context) -> None:
@@ -45,29 +39,5 @@ def main():
     # Start polling the bot and keep it running
     application.run_polling()
 
-# Add a handler for the /start command
-telegram_app.add_handler(CommandHandler("start", start))
-
-# Route for Telegram Webhook
-@app.route(f'/{TOKEN}', methods=['POST'])
-def webhook():
-    update = Update.de_json(request.get_json(force=True), telegram_app.bot)
-    telegram_app.process_update(update)
-    return 'ok'
-
-# Route to set webhook
-@app.route('/set_webhook', methods=['GET', 'POST'])
-def set_webhook():
-    webhook_url = f"https://your_pythonanywhere_domain.pythonanywhere.com/{TOKEN}"
-    telegram_app.bot.set_webhook(webhook_url)
-    return f"Webhook set to {webhook_url}"
-
-# Main route to check if the app is running
-@app.route('/')
-def index():
-    return "Telegram Bot is running!"
-
 if __name__ == '__main__':
     main()
-
-    app.run(port=5000)
