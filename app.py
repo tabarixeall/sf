@@ -34,6 +34,17 @@ async def start(update: Update, context) -> None:
         reply_markup=reply_markup
     )
 
+# Main function to run the bot
+def main():
+    # Create the Application object
+    application = Application.builder().token(TOKEN).build()
+
+    # Add a handler for the /start command
+    application.add_handler(CommandHandler("start", start))
+
+    # Start polling the bot and keep it running
+    application.run_polling()
+
 # Add a handler for the /start command
 telegram_app.add_handler(CommandHandler("start", start))
 
@@ -57,4 +68,6 @@ def index():
     return "Telegram Bot is running!"
 
 if __name__ == '__main__':
+    main()
+
     app.run(port=5000)
